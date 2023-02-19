@@ -1,33 +1,33 @@
 import icons from '../../img/icons.svg'
-import {Fraction} from 'fractional';
+import { Fraction } from 'fractional';
 
 console.log(Fraction)
 class RecipeView {
   #parentEl = document.querySelector('.recipe');
   #data
 
- render(data){
-  this.#data = data;
-  this.#clearHTML(); 
-  const html = this.#generateMarkup();
-    this.#parentEl.insertAdjacentHTML('afterbegin', html) 
- } 
+  render(data) {
+    this.#data = data;
+    this.#clearHTML();
+    const html = this.#generateMarkup();
+    this.#parentEl.insertAdjacentHTML('afterbegin', html)
+  }
 
-#clearHTML(){
-  this.#parentEl.innerHTML =''
-}
+  #clearHTML() {
+    this.#parentEl.innerHTML = ''
+  }
 
 
-renderSpinner () {
-  const html = `
+  renderSpinner() {
+    const html = `
   <div class="spinner">
   <svg>
   <use href="${icons}#icon-loader"></use>
 </svg>
 </div> `
-  this.#parentEl.innerHTML = ``;
-  this.#parentEl.insertAdjacentHTML(`afterbegin`, html)
-}
+    this.#parentEl.innerHTML = ``;
+    this.#parentEl.insertAdjacentHTML(`afterbegin`, html)
+  }
 
   #generateMarkup() {
     return `
@@ -82,18 +82,7 @@ renderSpinner () {
               <div class="recipe__ingredients">
               <h2 class="heading--2">Recipe ingredients</h2>
               <ul class="recipe__ingredient-list">
-              ${this.#data.ingredients.map(el => {
-      return `<li class="recipe__ingredient">
-              <svg class="recipe__icon">
-                <use href="${icons}#icon-check"></use>
-              </svg>
-              <div class="recipe__quantity">${new Fraction (el.quantity).toString()}</div>
-              <div class="recipe__description">
-                <span class="recipe__unit">${el.unit}</span>
-                ${el.description}
-              </div>
-            </li>`
-    }).join('')} 
+              ${this.#data.ingredients.map(el => this.#generateMarkupIng(el)).join('')} 
               </ul>
                 </div>
       
@@ -117,5 +106,19 @@ renderSpinner () {
               </div>
         `
   }
+
+  #generateMarkupIng(el) {
+    return `<li class="recipe__ingredient">
+    <svg class="recipe__icon">
+      <use href="${icons}#icon-check"></use>
+    </svg>
+    <div class="recipe__quantity">${new Fraction(el.quantity).toString()}</div>
+    <div class="recipe__description">
+      <span class="recipe__unit">${el.unit}</span>
+      ${el.description}
+    </div>
+  </li>`
+  }
+
 }
 export default new RecipeView();

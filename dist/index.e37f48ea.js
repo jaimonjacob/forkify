@@ -2702,18 +2702,7 @@ class RecipeView {
               <div class="recipe__ingredients">
               <h2 class="heading--2">Recipe ingredients</h2>
               <ul class="recipe__ingredient-list">
-              ${this.#data.ingredients.map((el)=>{
-            return `<li class="recipe__ingredient">
-              <svg class="recipe__icon">
-                <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
-              </svg>
-              <div class="recipe__quantity">${new (0, _fractional.Fraction)(el.quantity).toString()}</div>
-              <div class="recipe__description">
-                <span class="recipe__unit">${el.unit}</span>
-                ${el.description}
-              </div>
-            </li>`;
-        }).join("")} 
+              ${this.#data.ingredients.map((el)=>this.#generateMarkupIng(el)).join("")} 
               </ul>
                 </div>
       
@@ -2736,6 +2725,18 @@ class RecipeView {
                 </a>
               </div>
         `;
+    }
+    #generateMarkupIng(el) {
+        return `<li class="recipe__ingredient">
+    <svg class="recipe__icon">
+      <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
+    </svg>
+    <div class="recipe__quantity">${new (0, _fractional.Fraction)(el.quantity).toString()}</div>
+    <div class="recipe__description">
+      <span class="recipe__unit">${el.unit}</span>
+      ${el.description}
+    </div>
+  </li>`;
     }
 }
 exports.default = new RecipeView();
