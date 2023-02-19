@@ -1,4 +1,7 @@
 import icons from '../../img/icons.svg'
+import {Fraction} from 'fractional';
+
+console.log(Fraction)
 class RecipeView {
   #parentEl = document.querySelector('.recipe');
   #data
@@ -84,7 +87,7 @@ renderSpinner () {
               <svg class="recipe__icon">
                 <use href="${icons}#icon-check"></use>
               </svg>
-              <div class="recipe__quantity">${el.quantity}</div>
+              <div class="recipe__quantity">${new Fraction (el.quantity).toString()}</div>
               <div class="recipe__description">
                 <span class="recipe__unit">${el.unit}</span>
                 ${el.description}
