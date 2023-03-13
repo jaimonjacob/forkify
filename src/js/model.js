@@ -48,7 +48,7 @@ export const searchRecipe = async function (search) {
   }
 }
 
-export const searchResultsPagination = function (currentPage = 1){
+export const getSearchResultsforPage = function (currentPage = state.search.currentPage){
   const start = (currentPage - 1) * state.search.resultsPerPage;
   const end = currentPage * state.search.resultsPerPage;
   state.search.currentPage = currentPage;  
