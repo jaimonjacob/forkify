@@ -142,10 +142,10 @@
       this[globalName] = mainExports;
     }
   }
-})({"j2BuT":[function(require,module,exports) {
+})({"d8XZh":[function(require,module,exports) {
 var global = arguments[3];
 var HMR_HOST = null;
-var HMR_PORT = 1234;
+var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
 module.bundle.HMR_BUNDLE_ID = "d113fd8ce37f48ea";
@@ -3288,6 +3288,6 @@ class PaginationView extends (0, _viewJsDefault.default) {
 }
 exports.default = new PaginationView();
 
-},{"./View.js":"5cUXS","../../img/icons.svg":"cMpiy","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["j2BuT","aenu9"], "aenu9", "parcelRequire3a11")
+},{"./View.js":"5cUXS","../../img/icons.svg":"cMpiy","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["d8XZh","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map
