@@ -9,7 +9,6 @@ class PaginationView extends View {
     //Identifying the number of pages that correlate with the number of results
       const currPage = this._data.currentPage;
         const numPages = Math.ceil(this._data.results.length/this._data.resultsPerPage);
-        console.log(numPages)
 
   //Identifying what button to show by identifying the current page
    //if the currentpage is 1 and there are other pages
@@ -61,8 +60,6 @@ class PaginationView extends View {
     this._parentEl.addEventListener('click', function(e){
       const btn = e.target.closest('.btn--inline');
       const goToPage = +btn.dataset.goto;
-      console.log(btn)
-      console.log(goToPage)
       handler(goToPage) 
     }) 
   } 

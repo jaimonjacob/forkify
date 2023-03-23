@@ -98,6 +98,14 @@ class RecipeView extends View {
     `
 }
 
+addHandlerRenderUpdateServings(){ 
+  this._parentEl.addEventListener(`click`, function(e){
+    const btn = e.target.closest('.btn--increase-servings')
+    console.log(btn)
+  })
+
+}
+
 
   addHandlerRender(handler) {
     window.addEventListener('hashchange', handler);
