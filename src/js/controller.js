@@ -55,13 +55,12 @@ const controlPagination = function(goToPage){
 const controlUpdateServings = function(numServings){
   model.updateQuantityForServings(numServings)
   recipeView.render(model.state.recipe)
-  console.log('run')
 }
 
 
 const init = function(){
   recipeView.addHandlerRender(controlRecipes)
-  recipeView.addHandlerRenderUpdateServings();
+  recipeView.addHandlerRenderUpdateServings(controlUpdateServings);
   searchView.addHandlerSearch(controlSearch)
   paginationView.addHandlerPagination(controlPagination)
   

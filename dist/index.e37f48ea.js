@@ -611,11 +611,10 @@ const controlPagination = function(goToPage) {
 const controlUpdateServings = function(numServings) {
     _modelJs.updateQuantityForServings(numServings);
     (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
-    console.log("run");
 };
 const init = function() {
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
-    (0, _recipeViewJsDefault.default).addHandlerRenderUpdateServings();
+    (0, _recipeViewJsDefault.default).addHandlerRenderUpdateServings(controlUpdateServings);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearch);
     (0, _paginationViewJsDefault.default).addHandlerPagination(controlPagination);
 };
@@ -2777,12 +2776,12 @@ class RecipeView extends (0, _viewJsDefault.default) {
               <span class="recipe__info-text">servings</span>
   
               <div class="recipe__info-buttons">
-                <button class="btn--tiny btn--increase-servings">
+                <button class="btn--tiny btn--increase-servings" data-updateto=${this._data.servings - 1}>
                   <svg>
                     <use href="${0, _iconsSvgDefault.default}#icon-minus-circle"></use>
                   </svg>
                 </button>
-                <button class="btn--tiny btn--increase-servings">
+                <button class="btn--tiny btn--increase-servings" data-updateto=${this._data.servings + 1}>
                   <svg>
                     <use href="${0, _iconsSvgDefault.default}#icon-plus-circle"></use>
                   </svg>
@@ -2829,10 +2828,12 @@ class RecipeView extends (0, _viewJsDefault.default) {
           </div>
     `;
     }
-    addHandlerRenderUpdateServings() {
+    addHandlerRenderUpdateServings(handler) {
         this._parentEl.addEventListener(`click`, function(e) {
             const btn = e.target.closest(".btn--increase-servings");
-            console.log(btn);
+            const { updateto  } = btn.dataset;
+            if (updateto < 1) return;
+            handler(+updateto);
         });
     }
     addHandlerRender(handler) {
