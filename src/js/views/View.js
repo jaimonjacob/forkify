@@ -10,6 +10,17 @@ export default class View {
         this._parentEl.insertAdjacentHTML('afterbegin', markup)
     }
 
+  update(data){
+    if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
+    const newMarkup = this._generateMarkup();
+    this._data = data;
+    const newDom = document.createRange().createContextualFragment(newMarkup);
+    const newElements = Array.from(newDom.querySelector("*"))
+    console.log(newElements);
+    const currDom = Array.from(this._parentEl.querySelector("*"));
+  }  
+
+
     _clearHTML() {
         this._parentEl.innerHTML = ''
     }

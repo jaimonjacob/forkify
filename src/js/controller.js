@@ -54,7 +54,7 @@ const controlPagination = function(goToPage){
 
 const controlUpdateServings = function(numServings){
   model.updateQuantityForServings(numServings)
-  recipeView.render(model.state.recipe)
+  recipeView.update(model.state.recipe)
 }
 
 
