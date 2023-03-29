@@ -66,6 +66,4 @@ const init = function(){
   
 }
 
-init()
-
-
+init();

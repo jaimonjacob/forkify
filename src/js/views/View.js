@@ -14,19 +14,21 @@ export default class View {
     if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
     const newMarkup = this._generateMarkup();
     this._data = data;
-    const newDom = document.createRange().createContextualFragment(newMarkup);
-    console.log(newDom)
-    const newElements = Array.from(newDom.querySelectorAll("*"))
-    console.log(newElements);
-    const currElements = Array.from(this._parentEl.querySelectorAll("*"));
-    console.log(currElements)
+    const newDom = document.createRange().createContextualFragment(newMarkup);    
+    const newElements = Array.from(newDom.querySelectorAll("*"))    
+    const currElements = Array.from(this._parentEl.querySelectorAll("*"));    
     newElements.forEach((newEl, i) => {
-      const currEl = currElements [i];
-      console.log(currEl, newEl.isEqualNode(currEl))
+      const currEl = currElements [i]; 
+      //Changing text
       if (! newEl.isEqualNode(currEl) && newEl.firstChild?.nodeValue.trim() !==`` ) {
         currEl.textContent = newEl.textContent;
       }
 
+      //Changing attributes
+      if(!newEl.isEqualNode(currEl)) {        
+        Array.from(newEl.attributes).forEach(attr => {
+          currEl.setAttribute(attr.name, attr.value)})
+      }
     })
 
   }  
