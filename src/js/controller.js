@@ -20,9 +20,10 @@ const controlRecipes = async function () {
     const id = window.location.hash.slice(1);
     if (!id) return;//guard close
     recipeView.renderSpinner();
+    resultsView.update(model.getSearchResultsforPage())
     await model.loadRecipe(id);
     recipeView.render(model.state.recipe)
-    } catch (err) {
+     } catch (err) {
     console.error(err)
     recipeView.renderError()
   }
