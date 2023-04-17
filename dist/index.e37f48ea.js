@@ -2646,6 +2646,7 @@ const searchRecipe = async function(search) {
                 title: el.title
             };
         });
+        state.search.currentPage = 1;
     } catch (err) {
         throw err;
     }
