@@ -53,9 +53,15 @@ const controlPagination = function(goToPage){
   console.log('page console')
 }
 
+
 const controlUpdateServings = function(numServings){
   model.updateQuantityForServings(numServings)
   recipeView.update(model.state.recipe)
+}
+
+const controlBookmarks = function(){
+  model.addBookmarks(model.state.recipe);
+  console.log(model.state.recipe)
 }
 
 
