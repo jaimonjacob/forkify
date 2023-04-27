@@ -26,6 +26,9 @@ export const loadRecipe = async function (id) {
       title: recipe.title,
       servings: recipe.servings
     }
+
+  //Identify if the current recipe is part of the bookmarked list, if yes, change bookmarked proeprty to true
+  state.bookmarks.some(el=> el.id === id) ? state.recipe.bookmarked = true : state.recipe.bookmarked = false;
   } catch (err) {
     throw err
   }
@@ -64,8 +67,14 @@ export const updateQuantityForServings = function(newServings){
 
 
 export const addBookmarks = function(recipe){
-  state.bookmarks.push(recipe)
-  if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;   
+  state.bookmarks.push(recipe);
+  if (recipe.id === state.recipe.id) state.recipe.bookmarked = true; 
+}
+
+export const deleteBookmarks = function(id){
+    const bIndex = state.bookmarks.findIndex(el => el.id === id)
+    state.bookmarks.splice(bIndex, 1) 
+    if (id === state.recipe.id) state.recipe.bookmarked = false;
 }
 
 

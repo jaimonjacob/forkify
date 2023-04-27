@@ -11,7 +11,7 @@ export default class View {
     }
 
   update(data){
-    //if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
+    if (!data || (Array.isArray(data) && data.length === 0)) return '';
     const newMarkup = this._generateMarkup();
     this._data = data;
     const newDom = document.createRange().createContextualFragment(newMarkup);    

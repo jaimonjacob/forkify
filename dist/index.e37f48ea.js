@@ -613,11 +613,16 @@ const controlUpdateServings = function(numServings) {
     _modelJs.updateQuantityForServings(numServings);
     (0, _recipeViewJsDefault.default).update(_modelJs.state.recipe);
 };
+const controlBookmarks = function() {
+    !_modelJs.state.recipe.bookmarked ? _modelJs.addBookmarks(_modelJs.state.recipe) : _modelJs.deleteBookmarks(_modelJs.state.recipe.id);
+    (0, _recipeViewJsDefault.default).update(_modelJs.state.recipe);
+};
 const init = function() {
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _recipeViewJsDefault.default).addHandlerRenderUpdateServings(controlUpdateServings);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearch);
     (0, _paginationViewJsDefault.default).addHandlerPagination(controlPagination);
+    (0, _recipeViewJsDefault.default).addHandlerBookmarks(controlBookmarks);
 };
 init();
 
@@ -2604,6 +2609,8 @@ parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
 parcelHelpers.export(exports, "searchRecipe", ()=>searchRecipe);
 parcelHelpers.export(exports, "getSearchResultsforPage", ()=>getSearchResultsforPage);
 parcelHelpers.export(exports, "updateQuantityForServings", ()=>updateQuantityForServings);
+parcelHelpers.export(exports, "addBookmarks", ()=>addBookmarks);
+parcelHelpers.export(exports, "deleteBookmarks", ()=>deleteBookmarks);
 var _helpersJs = require("./helpers.js");
 var _configJs = require("./config.js");
 const state = {
@@ -2613,7 +2620,8 @@ const state = {
         results: [],
         currentPage: 1,
         resultsPerPage: (0, _configJs.RESULTS_PER_PAGE)
-    }
+    },
+    bookmarks: []
 };
 const loadRecipe = async function(id) {
     try {
@@ -2629,6 +2637,8 @@ const loadRecipe = async function(id) {
             title: recipe.title,
             servings: recipe.servings
         };
+        //Identify if the current recipe is part of the bookmarked list, if yes, change bookmarked proeprty to true
+        state.bookmarks.some((el)=>el.id === id) ? state.recipe.bookmarked = true : state.recipe.bookmarked = false;
     } catch (err) {
         throw err;
     }
@@ -2661,6 +2671,31 @@ const updateQuantityForServings = function(newServings) {
     state.recipe.ingredients.forEach((el)=>el.quantity = el.quantity * newServings / state.recipe.servings);
     state.recipe.servings = newServings;
 };
+const addBookmarks = function(recipe) {
+    state.bookmarks.push(recipe);
+    if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+};
+const deleteBookmarks = function(id) {
+    const bIndex = state.bookmarks.findIndex((el)=>el.id === id);
+    state.bookmarks.splice(bIndex, 1);
+    if (id === state.recipe.id) state.recipe.bookmarked = false;
+} /*
+Crate a function in model to bookmark the input array
+
+The bookmarked array is pushed to the bookmarks array in state
+
+If the recipee id of the current loaded recipee is the same as the current bookmarked id in this function, we need to set the bookmarked property of the recipe in the state object as true
+
+Use this functon to create an addbookmark controller function in controller
+
+Add handler function in View to add bookmkark through button.
+
+identify if the current recipe is a bookarked recipe, if yes, mark it as a bookmarked in model
+
+Change the bookarked icon for bookmarked recipes in the above case
+
+Add in a function to delte the bookmark in model and use the same in controller
+*/ ;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./helpers.js":"hGI1E","./config.js":"k5Hzs"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
@@ -2796,9 +2831,9 @@ class RecipeView extends (0, _viewJsDefault.default) {
                 <use href="${0, _iconsSvgDefault.default}#icon-user"></use>
               </svg>
             </div>
-            <button class="btn--round">
+            <button class="btn--round btn--bookmark">
               <svg class="">
-                <use href="${0, _iconsSvgDefault.default}#icon-bookmark-fill"></use>
+                <use href="${0, _iconsSvgDefault.default}#icon-bookmark${this._data.bookmarked ? "-fill" : ""}"></use>
               </svg>
             </button>
           </div>
@@ -2833,9 +2868,15 @@ class RecipeView extends (0, _viewJsDefault.default) {
     addHandlerRenderUpdateServings(handler) {
         this._parentEl.addEventListener(`click`, function(e) {
             const btn = e.target.closest(".btn--increase-servings");
+            if (!btn) return;
             const { updateto  } = btn.dataset;
             if (updateto < 1) return;
             handler(+updateto);
+        });
+    }
+    addHandlerBookmarks(handler) {
+        this._parentEl.addEventListener(`click`, function(e) {
+            if (e.target.closest(".btn--bookmark")) handler();
         });
     }
     addHandlerRender(handler) {
@@ -3150,7 +3191,7 @@ class View {
         this._parentEl.insertAdjacentHTML("afterbegin", markup);
     }
     update(data) {
-        //if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
+        if (!data || Array.isArray(data) && data.length === 0) return "";
         const newMarkup = this._generateMarkup();
         this._data = data;
         const newDom = document.createRange().createContextualFragment(newMarkup);
@@ -3315,6 +3356,7 @@ class PaginationView extends (0, _viewJsDefault.default) {
     addHandlerPagination(handler) {
         this._parentEl.addEventListener("click", function(e) {
             const btn = e.target.closest(".btn--inline");
+            if (!btn) return;
             const goToPage = +btn.dataset.goto;
             handler(goToPage);
         });
