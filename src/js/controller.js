@@ -67,14 +67,18 @@ const controlBookmarks = function(){
   bookmarksView.render(model.state.bookmarks)
 }
 
+const controlLoadBookmarks =function(){
+  model.restoreBookmarks();
+  bookmarksView.render(model.state.bookmarks)
+}
 
 const init = function(){
+  bookmarksView.addEventHandlerBookarks(controlLoadBookmarks)
   recipeView.addHandlerRender(controlRecipes)
   recipeView.addHandlerRenderUpdateServings(controlUpdateServings);
   searchView.addHandlerSearch(controlSearch)
   paginationView.addHandlerPagination(controlPagination)
-  recipeView.addHandlerBookmarks(controlBookmarks)
-  
+  recipeView.addHandlerBookmarks(controlBookmarks)  
 }
 
 init();

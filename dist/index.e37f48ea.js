@@ -621,7 +621,12 @@ const controlBookmarks = function() {
     (0, _recipeViewJsDefault.default).update(_modelJs.state.recipe);
     (0, _bookmarksViewJsDefault.default).render(_modelJs.state.bookmarks);
 };
+const controlLoadBookmarks = function() {
+    _modelJs.restoreBookmarks();
+    (0, _bookmarksViewJsDefault.default).render(_modelJs.state.bookmarks);
+};
 const init = function() {
+    (0, _bookmarksViewJsDefault.default).addEventHandlerBookarks(controlLoadBookmarks);
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _recipeViewJsDefault.default).addHandlerRenderUpdateServings(controlUpdateServings);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearch);
@@ -2615,6 +2620,7 @@ parcelHelpers.export(exports, "getSearchResultsforPage", ()=>getSearchResultsfor
 parcelHelpers.export(exports, "updateQuantityForServings", ()=>updateQuantityForServings);
 parcelHelpers.export(exports, "addBookmarks", ()=>addBookmarks);
 parcelHelpers.export(exports, "deleteBookmarks", ()=>deleteBookmarks);
+parcelHelpers.export(exports, "restoreBookmarks", ()=>restoreBookmarks);
 var _helpersJs = require("./helpers.js");
 var _configJs = require("./config.js");
 const state = {
@@ -2678,11 +2684,18 @@ const updateQuantityForServings = function(newServings) {
 const addBookmarks = function(recipe) {
     state.bookmarks.push(recipe);
     if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+    localStorage.setItem("bookmarks", JSON.stringify(state.bookmarks));
 };
 const deleteBookmarks = function(id) {
     const bIndex = state.bookmarks.findIndex((el)=>el.id === id);
     state.bookmarks.splice(bIndex, 1);
     if (id === state.recipe.id) state.recipe.bookmarked = false;
+    localStorage.setItem("bookmarks", JSON.stringify(state.bookmarks));
+};
+const restoreBookmarks = function() {
+    const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks"));
+    if (storedBookmarks) state.bookmarks = storedBookmarks;
+    console.log(storedBookmarks);
 } /*
 Crate a function in model to bookmark the input array
 
@@ -3336,6 +3349,9 @@ class BookmarksView extends (0, _viewJsDefault.default) {
       </div>
     </a>
   </li>`;
+    }
+    addEventHandlerBookarks(handler) {
+        window.addEventListener("load", handler);
     }
 }
 exports.default = new BookmarksView();

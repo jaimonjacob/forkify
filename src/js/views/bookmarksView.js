@@ -23,7 +23,11 @@ class BookmarksView extends View {
       </div>
     </a>
   </li>`
-   } 
+   }
+   
+   addEventHandlerBookarks(handler){
+    window.addEventListener('load', handler)
+   }
 
 
 }
