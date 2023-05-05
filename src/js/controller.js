@@ -6,7 +6,7 @@ import searchView from './views/searchView.js'
 import resultsView from './views/resultsView.js'
 import bookmarksView from './views/bookmarksView.js'
 import paginationView from './views/paginationView.js'
-import AddRecipeView from './views/addReceipeView.js'
+import addReceipeView from './views/addReceipeView.js'
 
 
 
@@ -74,8 +74,13 @@ const controlLoadBookmarks =function(){
   bookmarksView.render(model.state.bookmarks)
 }
 
+const controlAddRecipe = function(recipe){
+  console.log("run")
+}
+
 const init = function(){
   bookmarksView.addEventHandlerBookarks(controlLoadBookmarks)
+  addReceipeView.addHandlerUploadRecipe(controlAddRecipe)
   recipeView.addHandlerRender(controlRecipes)
   recipeView.addHandlerRenderUpdateServings(controlUpdateServings);
   searchView.addHandlerSearch(controlSearch)
