@@ -1,5 +1,6 @@
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
+import { MODAL_CLOLSE_SECONDS } from './config.js'
 import * as model from './model.js'
 import recipeView from './views/recipeView.js'
 import searchView from './views/searchView.js'
@@ -74,8 +75,19 @@ const controlLoadBookmarks =function(){
   bookmarksView.render(model.state.bookmarks)
 }
 
-const controlAddRecipe = function(recipe){
-  console.log("run")
+const controlAddRecipe = async function(newRecipe){
+  try{
+    addReceipeView.renderSpinner()
+    await model.uploadRecipe(newRecipe);    
+    addReceipeView.renderMessage()
+    setTimeout(function(){
+      addReceipeView.toggleWindow()
+    }, MODAL_CLOLSE_SECONDS * 1000);
+
+  }catch(err){
+    addReceipeView.renderError(err.message)
+  }
+  
 }
 
 const init = function(){

@@ -1,5 +1,5 @@
-import { getJSON } from "./helpers.js";
-import { API_URL, RESULTS_PER_PAGE} from "./config.js";
+import { getJSON, sendJSON } from "./helpers.js";
+import { API_URL, RESULTS_PER_PAGE, API_KEY} from "./config.js";
 
 export const state = {
   recipe: {},
@@ -12,21 +12,25 @@ export const state = {
   bookmarks: []
 }
 
+const returnRecipe = function(data){
+  const { recipe } = data.data;
+  return {
+    sourceUrl: recipe.source_url,
+    id: recipe.id,
+    ingredients: recipe.ingredients,
+    imageUrl: recipe.image_url,
+    publisher: recipe.publisher,
+    cookingTime: recipe.cooking_time,
+    title: recipe.title,
+    servings: recipe.servings,
+    ...(recipe.key && {key: recipe.key})//short-circuiting to check if key is present and if yes, add property - HANDY
+  }
+}
+
 export const loadRecipe = async function (id) {
   try {
     const data = await getJSON(`${API_URL}/${id}`);
-    const { recipe } = data.data;
-    state.recipe = {
-      sourceUrl: recipe.source_url,
-      id: recipe.id,
-      ingredients: recipe.ingredients,
-      imageUrl: recipe.image_url,
-      publisher: recipe.publisher,
-      cookingTime: recipe.cooking_time,
-      title: recipe.title,
-      servings: recipe.servings
-    }
-
+    state.recipe = returnRecipe(data)
   //Identify if the current recipe is part of the bookmarked list, if yes, change bookmarked proeprty to true
   state.bookmarks.some(el=> el.id === id) ? state.recipe.bookmarked = true : state.recipe.bookmarked = false;
   } catch (err) {
@@ -90,20 +94,32 @@ export const clearBookmarks = function(){
   localStorage.clear('bookmarks')
 }
 
-/*
-Crate a function in model to bookmark the input array
+export const uploadRecipe = async function(newRecipe){
+  
+  try{
+    console.log(newRecipe)
+    const ingredients =  Object.entries(newRecipe).filter(el=> el[0].startsWith('ingredient') && el[1])
+    .map(el => {
+      const [quantity, unit, description] = el[1].replaceAll(' ', '').split(',')
+      return {quantity: quantity? +quantity: null, unit, description}
+      
+    });
+    const recipe = {
+      title: newRecipe.title,
+      source_url: newRecipe.sourceUrl,
+      image_url: newRecipe.image,
+      publisher: newRecipe.publisher,
+      servings: +newRecipe.servings,
+      cooking_time: +newRecipe.cookingTime,
+      ingredients
+    }
+    console.log(recipe)
+    const data = await sendJSON(`${API_URL}?key=${API_KEY}`, recipe)
+    state.recipe = returnRecipe(data)
+    addBookmarks(state.recipe)
+    console.log(state.recipe)
+  } catch(err) {
+    throw err
+  }
 
-The bookmarked array is pushed to the bookmarks array in state
-
-If the recipee id of the current loaded recipee is the same as the current bookmarked id in this function, we need to set the bookmarked property of the recipe in the state object as true
-
-Use this functon to create an addbookmark controller function in controller
-
-Add handler function in View to add bookmkark through button.
-
-identify if the current recipe is a bookarked recipe, if yes, mark it as a bookmarked in model
-
-Change the bookarked icon for bookmarked recipes in the above case
-
-Add in a function to delte the bookmark in model and use the same in controller
-*/
+}
