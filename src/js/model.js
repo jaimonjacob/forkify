@@ -86,6 +86,9 @@ export const restoreBookmarks = function(){
   console.log(storedBookmarks)
 }
 
+export const clearBookmarks = function(){
+  localStorage.clear('bookmarks')
+}
 
 /*
 Crate a function in model to bookmark the input array
