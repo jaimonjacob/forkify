@@ -80,10 +80,11 @@ const controlAddRecipe = async function(newRecipe){
     addReceipeView.renderSpinner()
     await model.uploadRecipe(newRecipe);    
     addReceipeView.renderMessage()
+    bookmarksView.render(model.state.bookmarks)
+    recipeView.render(model.state.recipe)
     setTimeout(function(){
       addReceipeView.toggleWindow()
     }, MODAL_CLOLSE_SECONDS * 1000);
-
   }catch(err){
     addReceipeView.renderError(err.message)
   }
